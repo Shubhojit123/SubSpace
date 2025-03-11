@@ -4,7 +4,7 @@ import { Helmet } from "react-helmet";
 import styles from "../styles/pages/Dashboard.module.css";
 
 const categories = [
-  "Car", "Technology", "Sports", "Business", "Health", "Entertainment", 
+  "Car", "Technology", "Sports", "Business", "Health", "Entertainment",
   "Politics", "Travel", "Education", "Food", "Gaming"
 ];
 
@@ -39,9 +39,19 @@ const Dashboard = () => {
     setError(null);
     try {
       const response = await fetch(
-        `https://newsapi.org/v2/everything?q=${selectedCategory}&apiKey=db0676d186234b668362bf628827da8e`
+        `https://newsapi.org/v2/everything?q=${selectedCategory}&apiKey=db0676d186234b668362bf628827da8e`,
+        {
+          method: "GET",
+          mode: "cors",
+          headers: {
+            "Content-Type": "application/json",
+            "Upgrade-Insecure-Requests": "1",
+          },
+        }
       );
-      if (!response.ok) throw new Error("Failed to fetch news");
+      if (response.status === 426) throw new Error("426 Upgrade Required - Use HTTPS");
+      if (!response.ok) throw new Error(`Error ${response.status}: Failed to fetch news`);
+
       const data = await response.json();
 
       const newsWithSentiment = await Promise.all(
@@ -53,6 +63,7 @@ const Dashboard = () => {
       setNews(newsWithSentiment);
     } catch (err) {
       setError(err.message);
+      console.error("❌ Fetch News Error:", err);
     } finally {
       setLoading(false);
     }
