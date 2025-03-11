@@ -39,7 +39,7 @@ const Dashboard = () => {
     setError(null);
     try {
       const response = await fetch(
-        `https://newsapi.org/v2/everything?q=${selectedCategory}&apiKey=4f34f7a5a49e4046af266a60d5473b6b`
+        `https://newsapi.org/v2/everything?q=${selectedCategory}&apiKey=db0676d186234b668362bf628827da8e`
       );
       if (!response.ok) throw new Error("Failed to fetch news");
       const data = await response.json();
